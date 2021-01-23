@@ -1,8 +1,11 @@
 package com.lgzzzz.reactwithspring.payroll;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
 import java.util.Objects;
 
 @Entity
@@ -12,7 +15,9 @@ public class Employee {
     private String lastName;
     private String description;
 
-    Employee() {}
+    private @Version @JsonIgnore Long version;
+
+    private Employee() {}
 
     public Employee(String firstName, String lastName, String description) {
         this.firstName = firstName;
@@ -52,17 +57,25 @@ public class Employee {
         this.description = description;
     }
 
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Employee)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(getId(), employee.getId()) && Objects.equals(getFirstName(), employee.getFirstName()) && Objects.equals(getLastName(), employee.getLastName()) && Objects.equals(getDescription(), employee.getDescription());
+        return Objects.equals(id, employee.id) && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName) && Objects.equals(description, employee.description) && Objects.equals(version, employee.version);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getDescription());
+        return Objects.hash(id, firstName, lastName, description, version);
     }
 
     @Override
@@ -72,6 +85,7 @@ public class Employee {
             ", firstName='" + firstName + '\'' +
             ", lastName='" + lastName + '\'' +
             ", description='" + description + '\'' +
+            ", version=" + version +
             '}';
     }
 }
